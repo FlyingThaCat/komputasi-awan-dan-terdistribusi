@@ -1,12 +1,13 @@
 # Tugas 1 — Analisis Pitfall FoodGo
 
-**Kelompok:** [nama kelompok]
+**Kelompok:** Kelompok 3
 
 | Nama | NIM | Kontribusi |
 |---|---|---|
-| [nama 1] | [nim] | [pitfall/bagian yang dikerjakan] |
-| [nama 2] | [nim] | [pitfall/bagian yang dikerjakan] |
-| [nama 3] | [nim] | [pitfall/bagian yang dikerjakan] |
+| I Made Sudiarte | [nim] | [pitfall/bagian yang dikerjakan] |
+| John Tjandra Utomo | 103072400023 | [pitfall/bagian yang dikerjakan] |
+| Ivan  | [nim] | [pitfall/bagian yang dikerjakan] |
+| Lilo Wahyu Rachmadani | 103072400126 | [pitfall/bagian yang dikerjakan] |
 
 ## Pitfall 1: [nama pitfall] — ditulis oleh [nama]
 
