@@ -6,7 +6,7 @@
 |---|---|---|
 | I Made Sudiarte | [nim] | [pitfall/bagian yang dikerjakan] |
 | John Tjandra Utomo | 103072400023 | [pitfall/bagian yang dikerjakan] |
-| Ivan Radithya Tanaya Ardianto | 103072430005 | [pitfall/bagian yang dikerjakan] |
+| Ivan  | [nim] | [pitfall/bagian yang dikerjakan] |
 | Lilo Wahyu Rachmadani | 103072400126 | [pitfall/bagian yang dikerjakan] |
 
 ## Pitfall 1: "network is always reliable" — ditulis oleh John Tjandra Utomo
