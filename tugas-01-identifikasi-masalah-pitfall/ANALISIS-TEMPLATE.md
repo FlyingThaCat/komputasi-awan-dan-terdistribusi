@@ -4,9 +4,9 @@
 
 | Nama | NIM | Kontribusi |
 |---|---|---|
-| I Made Sudiarte | [nim] | [pitfall/bagian yang dikerjakan] |
+| I Made Sudiarte | 103072400044 | [pitfall/bagian yang dikerjakan] |
 | John Tjandra Utomo | 103072400023 | [pitfall/bagian yang dikerjakan] |
-| Ivan  | [nim] | [pitfall/bagian yang dikerjakan] |
+| Ivan Radithya Tanaya Ardianto | 103072430005 | [pitfall/bagian yang dikerjakan] |
 | Lilo Wahyu Rachmadani | 103072400126 | [pitfall/bagian yang dikerjakan] |
 
 ## Pitfall 1: "network is always reliable" — ditulis oleh John Tjandra Utomo
@@ -41,17 +41,21 @@
 
 ---
 
-## Pitfall 3: [nama pitfall] — ditulis oleh [nama]
+## Pitfall 3: Single Point of Failure dan Skalabilitas Buruk — ditulis oleh Ivan Radithya Tanaya Ardianto
 
-**Bukti di skenario:** [kutip/paraphrase bagian skenario]
+**Bukti di skenario:** Dari [kutipan](https://github.com/FlyingThaCat/komputasi-awan-dan-terdistribusi/tree/main/tugas-01-identifikasi-masalah-pitfall#studi-kasus-foodgo) ini "satu server yang menangani semua modul (pesanan, pembayaran, notifikasi kurir) kewalahan karena semuanya berjalan di satu proses monolitik yang sama.". Saat traffic padat, ditemukan satu server yang menangani banyak modul yang berjalan dalam satu proses monolik yang sama.
 
-**Kenapa ini keliru:** [penjelasan]
 
-**Dampak ke FoodGo:** [mekanisme kegagalan konkret]
+**Kenapa ini keliru:** Hal tersebut tentu saja melanggar tujuan dari skalabilitas, di mana jika suatu modul sedang padat, modul tersebut boleh hanya diperbesar. Tetapi juga harus meningkatkan seluruh spesifikasi server (_vertical scaling_) atau dengan menduplikasi seluruh aplikasi beserta modul-modul yang sedang sepi. Dengan satu proses bisa diartikan juga satu failure domain, yang dapat berakibat pada kerusakan system. Termasuk bug, kebocoran memori, atau lonjakan beban akibat satu modul menjatuhkan semuanya. Skala juga tidak diatur per modul, kenyataannya kebutuhan pada setiap modul berbeda.
 
-**Solusi desain awal:** [usulan solusi]
+**Dampak ke FoodGo:** Saat melakukan pembayaran atau transaksi bisa terjadi macet atau _crash_, diikuti dengan modul notifikasi kurir yang ikut mati. Pesanan yang sudah dibayar tidak sampai ke kurir, menjadikan masalah yang makin meluas dari pembayaran ke seluruh operasional (seperti upgrade server). Karena hanya ada satu server, tidak ada instance cadangan yang dapat mengambil alih, sehingga restart manual harus dilakukan.
 
-**Trade-off:** [apa yang dikorbankan/risiko dari solusi ini]
+**Solusi desain awal:**
+- Jalankan beberapa instance di balik _load balancer_ dengan _health check_ (skala horizontal), sehingga saat satu instance mati, tidak akan mematikan layanan atau modul lain. 
+- Pisahkan modul secara bertahap, mulai dari yang paling beresiko sepeerti pembayaran dan notifikasi yang dijadikan service terpisah. Tidak perlu langsung memecah semuanya menjadi microservice.
+- Jadikan notifikasi kurir secara asinkron lewat _message queque_, agar pesanan tidak menunggu notifikasi dan lonjakan beban yang bisa diserap oleh antrean.
+
+**Trade-off:** Setelah modul dipisahkan, interaksi antar modul berubah dari pemanggilan fungsi lokal menjadi _network call_. FoodGo jutru makin terdampak Fallacies yang sama (seperti latensi dan kegagalan parsial) dan beban operasional yang naik (seperti deployment, monitoring, dan debugging terdistribusi). Itu sebabnya disarankan pemisahan bertahap, bukan langsung microservice penuh.
 
 ---
 
