@@ -55,17 +55,17 @@
 
 ---
 
-## Pitfall 4: [nama pitfall] — ditulis oleh [nama]
+## Pitfall 4: Asumsi kapasitas tak terbatas (tidak ada backpressure dan load shedding) — ditulis oleh I Made Sudiarte
 
-**Bukti di skenario:** [kutip/paraphrase bagian skenario]
+**Bukti di skenario:** "Saat jam makan siang, banyak orang memesan makanan secara bersamaan contoh (100000 orang)". System API pesanan akan langsung meneruskan dan memproses seluruh request pesanan tersebut dari pengguna ke database secara real-time tanpa ada Batasan untuk jumlah requestnya.
 
-**Kenapa ini keliru:** [penjelasan]
+**Kenapa ini keliru:** Sistem dibangun dengan asumsi bahwa database mereka kuat memproses 100000 request secara bersamaan, padahal pada umumnya database hanya bisa memproses 10000 request jika requestnya dikirim secara bersamaan.
 
-**Dampak ke FoodGo:** [mekanisme kegagalan konkret]
+**Dampak ke FoodGo:** Permintaan pesanan akan menumpuk, database akan mengalami error "connection timeout", server aplikasi akan kehabisan memori akibat permintaan pesanan melebihi batas normal proses pada database. serta latency aplikasi mengalami kenaikan secara drastis yang menyebabkan sistem aplikasi mengalami crash.
 
-**Solusi desain awal:** [usulan solusi]
+**Solusi desain awal:** Terapkan ratte limmiting di API Gateway, agar jika kapasitas permintaan penuh sistem akan melakukan load shedding dimana API Gateway akan langsung menolak pesanan baru yang masuk. dan terapkan sistem queue (message queue), setiap pesanan yang masuk akan ditaruh diantian dulu sebelum diproses lalu database akan langsung memprosesnya satu-satu.
 
-**Trade-off:** [apa yang dikorbankan/risiko dari solusi ini]
+**Trade-off:** karena menggunakan sistem antrian, pesanan tidak lagi langsung diproses/instan serta sistem akan menjadi lebih rumit dan mahal karena menambah komponen baru di server, pesanan akan mengalami sedikit keterlambatan, saat sistem melakukan load shedding ada kemungkinan pelanggan yang tadinya ingin memesan makanan dan pesanannya ditolak karena kapasitas permintaan penuh memutuskan tidak jadi memesan.
 
 ---
 
