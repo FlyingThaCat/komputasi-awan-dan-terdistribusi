@@ -4,7 +4,7 @@
 
 | Nama | NIM | Kontribusi |
 |---|---|---|
-| I Made Sudiarte | [nim] | [pitfall/bagian yang dikerjakan] |
+| I Made Sudiarte | 103072400044 | [pitfall/bagian yang dikerjakan] |
 | John Tjandra Utomo | 103072400023 | [pitfall/bagian yang dikerjakan] |
 | Ivan  | [nim] | [pitfall/bagian yang dikerjakan] |
 | Lilo Wahyu Rachmadani | 103072400126 | [pitfall/bagian yang dikerjakan] |
