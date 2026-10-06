@@ -23,17 +23,21 @@
 
 ---
 
-## Pitfall 2: [nama pitfall] — ditulis oleh [nama]
+## Pitfall 2: Latency is Zero — ditulis oleh Lilo Wahyu Rachmadani
 
-**Bukti di skenario:** [kutip/paraphrase bagian skenario]
+**Bukti di skenario:** "Aplikasi jadi sangat lambat, beberapa permintaan timeout." dan "... tidak ada timeout sama sekali pada pemanggilan antar service (modul pesanan memanggil modul pembayaran dan menunggu tanpa batas waktu)."
 
-**Kenapa ini keliru:** [penjelasan]
 
-**Dampak ke FoodGo:** [mekanisme kegagalan konkret]
+**Kenapa ini keliru**: Asumsi bahwa latency is zero merupakan analisa yang keliru, karena komunikasi melalui jaringan tidak pernah terjadi secara instan (0 milidetik). Pengiriman data selalu membutuhkan waktu untuk melalui jaringan (seperti kabel dan router), serta sangat bergantung pada kecepatan pemrosesan dan kondisi server tujuan. 
 
-**Solusi desain awal:** [usulan solusi]
+**Dampak ke FoodGo**: Ketiadaan timeout membuat thread di modul pesanan terhenti (mengalami blocking) karena terus menunggu respon dari modul pembayaran tanpa batas waktu. Saat jam makan siang, penumpukkan thread yang menggantung ini dapat menghabiskan kapasitas pemrosesan server (thread exhaustion), sehingga aplikasi berjalan dengan sangat lambat. pesanan baru bertumpuk, dan proses server akhirnya mengalami crash secara menyeluruh.  
 
-**Trade-off:** [apa yang dikorbankan/risiko dari solusi ini]
+**Solusi desain awal:** 
+1. Memasang timeout (batas waktu) sehingga saat tidak ada respons dalam kurun waktu tertentu, sistem akan langsung memutus koneksi secara sepihak dan membebaskan thread server.
+2. Jika terjadi kegagalan berturut-turut pada pemanggilan modul pembayaran, maka request pemanggilan berikutnya akan ditolak dengan cepat tanpa membebani server.
+
+
+**Trade-off:** FoodGo mengorbankan potensi pendapatan dari pengguna dan waktu atau kenyamanan pengguna saat terjadi gangguan demi mencegah server mati total (crash). Sistem lebih memilih menolak sebagian transaksi dengan cepat (fail-fast) daripada membiarkan seluruh aplikasi lumpuh untuk semua pengguna.
 
 ---
 
