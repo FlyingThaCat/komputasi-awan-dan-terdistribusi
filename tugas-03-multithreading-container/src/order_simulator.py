@@ -16,8 +16,8 @@ NUM_WORKERS = 10        # jumlah thread pekerja
 # Sengaja rawan race condition jika diakses tanpa proteksi.
 processed_count = 0
 
-# TODO 1: Buat objek Lock di sini untuk melindungi `processed_count`.
-# lock = threading.Lock()
+# Lock untuk melindungi akses ke processed_count agar tidak terjadi race condition.
+lock = threading.Lock()
 
 
 def process_order(order_id: int) -> None:
@@ -27,12 +27,23 @@ def process_order(order_id: int) -> None:
     # Simulasikan kerja nyata (mis. validasi, hitung total harga)
     time.sleep(random.uniform(0.001, 0.01))
 
-    # TODO 2: Tambahkan increment `processed_count` DI SINI.
     # Langkah 1: jalankan dulu tanpa lock (increment biasa: processed_count += 1)
     #            dan buktikan hasil akhirnya sering salah (< NUM_ORDERS).
+    # JAWABAN LANGKAH 1:
+    current = processed_count
+    time.sleep(0.001) # create a small delay to increase the chance of race condition
+    processed_count = current + 1
+
+
     # Langkah 2: bungkus increment dengan `with lock:` dan buktikan hasilnya
     #            selalu tepat NUM_ORDERS. Simpan bukti kedua kondisi ini
     #            di JURNAL.md / folder bukti/.
+    # JAWABAN LANGKAH 2:
+    # with lock:
+    #     current = processed_count
+    #     time.sleep(0.001)
+    #     processed_count = current + 1
+    
     pass
 
 
@@ -49,7 +60,24 @@ def main() -> None:
     # threading.Thread per bagian yang menjalankan `worker(...)`,
     # start semua thread, lalu join semua thread sebelum lanjut.
     threads = []
-    # ... isi logika pembagian tugas & pembuatan thread di sini ...
+
+    # Jawaban TODO 3:
+    # Bagi order_ids menjadi NUM_WORKERS bagian
+    for i in range(NUM_WORKERS):
+        # Ambil bagian order_ids untuk thread ke-i
+        assigned_orders = order_ids[i::NUM_WORKERS]
+
+        # Buat thread untuk memproses assigned_orders
+        t = threading.Thread(
+            target=worker,
+            args=(assigned_orders,)
+        )
+
+        # Tambahkan thread ke daftar threads
+        threads.append(t)
+
+    for t in threads:
+        t.start()
 
     for t in threads:
         t.join()
