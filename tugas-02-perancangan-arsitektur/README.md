@@ -64,7 +64,7 @@ FoodGo menggunakan kombinasi Service-Oriented Architecture (SOA) dan Publish-Sub
 
 ## 2. Diagram Arsitektur dan Interaksi Komponen
 
-Diagram berikut menggambarkan bagaimana setiap komponen dalam sistem FoodGo saling berinteraksi, mulai dari pelanggan membuat pesanan sampai proses pembayaran dan pengiriman notifikasi. Setiap layanan memiliki tugas masing-masing, sehingga tidak semua proses harus dilakukan secara langsung. Untuk komunikasi yang membutuhkan respons cepat, seperti validasi menu dan harga, digunakan komunikasi sinkron. Sementara itu, untuk proses seperti pengiriman informasi pesanan dan pembaruan status pembayaran, digunakan pola Publish-Subscribe melalui *message broker*.
+Diagram berikut menggambarkan bagaimana setiap komponen dalam sistem FoodGo saling berinteraksi, mulai dari pelanggan membuat pesanan sampai proses pembayaran dan pengiriman notifikasi. Setiap layanan memiliki tugas masing-masing, sehingga tidak semua proses harus dilakukan secara langsung. Untuk komunikasi yang membutuhkan respons cepat, seperti validasi menu dan harga, digunakan komunikasi sinkron. Sementara itu, untuk proses seperti pengiriman informasi pesanan dan pembaruan status pembayaran, digunakan pola Publish-Subscribe melalui message broker.
 
 ```mermaid
 graph LR
@@ -103,7 +103,7 @@ graph LR
 
 ## 3. Diagram Alur End-to-End
 
-Proses pemesanan FoodGo dimulai dari pelanggan membuat pesanan, melakukan pembayaran, hingga restoran menerima pesanan dan kurir ditugaskan untuk mengantarkannya. Komunikasi sinkron digunakan untuk pengecekan menu dan harga yang membutuhkan respons langsung, sedangkan komunikasi asinkron digunakan untuk mengirimkan informasi melalui *message broker*, seperti hasil pembayaran dan perubahan status pesanan.
+Proses pemesanan FoodGo dimulai dari pelanggan membuat pesanan, melakukan pembayaran, hingga restoran menerima pesanan dan kurir ditugaskan untuk mengantarkannya. Komunikasi sinkron digunakan untuk pengecekan menu dan harga yang membutuhkan respons langsung, sedangkan komunikasi asinkron digunakan untuk mengirimkan informasi melalui message broker, seperti hasil pembayaran dan perubahan status pesanan.
 
 ```mermaid
 sequenceDiagram
@@ -173,4 +173,4 @@ sequenceDiagram
 
 ## Analisis Alur Komunikasi
 
-Pada alur komunikasi FoodGo, komunikasi sinkron digunakan untuk proses yang membutuhkan respons langsung, seperti pengecekan menu dan harga serta konfirmasi pesanan dari restoran. Sementara itu, komunikasi asinkron digunakan untuk mengirimkan informasi melalui *message broker*, misalnya hasil pembayaran dan perubahan status pesanan. Dengan menggunakan Publish-Subscribe, setiap layanan tidak harus berkomunikasi secara langsung dengan layanan lainnya untuk menyampaikan informasi. Sebagai contoh, ketika pembayaran berhasil, Service Pembayaran akan mengirimkan event yang nantinya diproses oleh Service Pesanan untuk memperbarui status pesanan dan Service Notifikasi Kurir untuk memberikan informasi kepada pihak terkait. Dengan cara ini, ketergantungan antarlayanan bisa dikurangi sehingga sistem FoodGo lebih mudah dikembangkan dan dikelola. Namun, sistem tetap perlu menangani kemungkinan keterlambatan pengiriman event, event yang diterima lebih dari sekali, atau kegagalan komunikasi agar proses pemesanan tetap berjalan dengan baik.
+Pada alur komunikasi FoodGo, komunikasi sinkron digunakan untuk proses yang membutuhkan respons langsung, seperti pengecekan menu dan harga serta konfirmasi pesanan dari restoran. Sementara itu, komunikasi asinkron digunakan untuk mengirimkan informasi melalui message broker, misalnya hasil pembayaran dan perubahan status pesanan. Dengan menggunakan Publish-Subscribe, setiap layanan tidak harus berkomunikasi secara langsung dengan layanan lainnya untuk menyampaikan informasi. Sebagai contoh, ketika pembayaran berhasil, Service Pembayaran akan mengirimkan event yang nantinya diproses oleh Service Pesanan untuk memperbarui status pesanan dan Service Notifikasi Kurir untuk memberikan informasi kepada pihak terkait. Dengan cara ini, ketergantungan antarlayanan bisa dikurangi sehingga sistem FoodGo lebih mudah dikembangkan dan dikelola. Namun, sistem tetap perlu menangani kemungkinan keterlambatan pengiriman event, event yang diterima lebih dari sekali, atau kegagalan komunikasi agar proses pemesanan tetap berjalan dengan baik.
