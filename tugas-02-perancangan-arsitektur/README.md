@@ -107,8 +107,6 @@ Melalui arsitektur ini, FoodGo dapat memisahkan komunikasi yang membutuhkan resp
 
 Proses pemesanan FoodGo dimulai dari pelanggan membuat pesanan, melakukan pembayaran, hingga restoran menerima pesanan dan kurir ditugaskan untuk mengantarkannya. Komunikasi sinkron digunakan untuk pengecekan menu dan harga yang membutuhkan respons langsung, sedangkan komunikasi asinkron digunakan untuk mengirimkan informasi melalui *message broker*, seperti hasil pembayaran dan perubahan status pesanan.
 
-## Diagram Alur Komunikasi
-
 ```mermaid
 sequenceDiagram
     actor C as Pelanggan
