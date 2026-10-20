@@ -13,6 +13,7 @@ Melanjutkan Tugas 1: FoodGo butuh sistem yang **decoupled** agar tim kurir dan t
 3. Jelaskan alur satu skenario penuh secara end-to-end di diagram (misalnya: pelanggan buat pesanan → bayar → resto terima notifikasi → kurir ditugaskan) — tunjukkan komponen mana berkomunikasi dengan siapa, dan **jenis komunikasinya** (sinkron/asinkron, request-response/event).
 4. Analisis tertulis: kenapa gaya ini mengatasi masalah *coupling* dari Tugas 1, dan apa trade-off-nya (mis. Pub-Sub menambah kompleksitas debugging karena alur tidak linear).
 
+# Jawaban
 ## 1. Pemilihan Gaya Arsitektur
 
 FoodGo menggunakan kombinasi Service-Oriented Architecture (SOA) dan Publish-Subscribe untuk membuat sistem yang lebih terpisah dan tidak saling bergantung. Dengan SOA, fungsi utama FoodGo dibagi menjadi beberapa layanan, seperti modul Pesanan, Pembayaran, Kurir/Notifikasi, dan Katalog Resto, sehingga setiap layanan bisa dikembangkan, diperbarui, dan di-deploy secara mandiri. Sementara itu, Publish-Subscribe digunakan agar komunikasi antarlayanan bisa dilakukan melalui event yang dikirim menggunakan *message broker*. Kombinasi ini dipilih karena komunikasi yang membutuhkan respons langsung, seperti validasi menu, dapat menggunakan metode sinkron, sedangkan proses yang tidak harus langsung mendapatkan respons, seperti pengiriman notifikasi dan pembaruan status pesanan, dapat menggunakan metode asinkron. Dengan begitu, sistem FoodGo menjadi lebih fleksibel, mudah dikembangkan, dan tidak terlalu bergantung pada satu layanan saja.
@@ -129,3 +130,23 @@ sequenceDiagram
 ## Analisis Alur Komunikasi
 
 Pada alur komunikasi FoodGo, komunikasi sinkron digunakan untuk proses yang membutuhkan respons langsung, seperti pengecekan menu dan harga serta konfirmasi pesanan dari restoran. Sementara itu, komunikasi asinkron digunakan untuk mengirimkan informasi melalui message broker, misalnya hasil pembayaran dan perubahan status pesanan. Dengan menggunakan Publish-Subscribe, setiap layanan tidak harus berkomunikasi secara langsung dengan layanan lainnya untuk menyampaikan informasi. Sebagai contoh, ketika pembayaran berhasil, Service Pembayaran akan mengirimkan event yang nantinya diproses oleh Service Pesanan untuk memperbarui status pesanan dan Service Notifikasi Kurir untuk memberikan informasi kepada pihak terkait. Dengan cara ini, ketergantungan antarlayanan bisa dikurangi sehingga sistem FoodGo lebih mudah dikembangkan dan dikelola. Namun, sistem tetap perlu menangani kemungkinan keterlambatan pengiriman event, event yang diterima lebih dari sekali, atau kegagalan komunikasi agar proses pemesanan tetap berjalan dengan baik.
+
+## 4. Analisis Tertulis
+
+Pada Tugas 1 FoodGo mengalami masalah coupling karena modul-modul dalam sistem masih saling terhubung sehingga gangguan pada satu modul dapat memengaruhi modul lainnya. Penerapan SOA (Service-Oriented Architecture) yang dikombinasikan dengan Publish-Subscribe mengatasi masalah tersebut dengan memisahkan modul Pesanan, Pembayaran, Katalog Resto, dan Notifikasi Kurir menjadi layanan mandiri. Selain itu, Publish-Subscribe memungkinkan komunikasi antarlayanan melalui message broker tanpa harus saling memanggil secara langsung. Contohnya, ketika pembayaran berhasil, layanan Pembayaran mengirimkan event yang digunakan oleh layanan Pesanan untuk memperbarui status dan layanan Notifikasi Kurir untuk menyampaikan informasi. Dengan begitu, ketergantungan antarlayanan dapat dikurangi sehingga sistem lebih mudah dikembangkan dan gangguan pada satu layanan tidak langsung menghentikan layanan lainnya.
+
+### Trade-off
+
+| Trade-off | Dampak terhadap FoodGo | Penanganan |
+|---|---|---|
+| Kompleksitas sistem | Penggunaan banyak layanan dan *message broker* membuat sistem lebih rumit untuk dikelola. | Membuat dokumentasi dan konfigurasi layanan yang jelas. |
+| Debugging | Alur komunikasi melalui event lebih sulit dilacak karena prosesnya tidak selalu berjalan secara berurutan. | Menggunakan log dan *distributed tracing* untuk melacak proses komunikasi. |
+| Event terlambat | Pembaruan status pesanan bisa terlambat diterima oleh layanan lain. | Menerapkan mekanisme *retry* dan pemantauan event. |
+| Event duplikat | Event yang diterima lebih dari sekali dapat menyebabkan proses dilakukan berulang. | Memastikan setiap event tidak diproses lebih dari sekali secara efektif melalui mekanisme *idempotency*. |
+| Urutan event | Event yang diterima tidak sesuai urutan dapat menyebabkan status pesanan menjadi tidak tepat. | Memvalidasi status pesanan sebelum melakukan pembaruan. |
+| Konsistensi data | Data antarlayanan mungkin tidak langsung sama karena proses pembaruan dilakukan secara asinkron. | Menyediakan mekanisme sinkronisasi dan pengecekan data. |
+| Perubahan API | Perubahan pada API atau format event dapat mengganggu komunikasi dengan layanan lain. | Menjaga kompatibilitas API dan format event saat melakukan perubahan. |
+
+### Kesimpulan
+
+Berdasarkan hasil analisis, kombinasi SOA dan Publish-Subscribe dipilih untuk mengatasi masalah coupling pada sistem FoodGo. SOA membagi sistem menjadi beberapa layanan yang dapat dikembangkan dan dijalankan secara terpisah, sedangkan Publish-Subscribe memudahkan komunikasi antarlayanan melalui message broker tanpa harus saling terhubung secara langsung. Dengan pendekatan ini, perubahan pada satu layanan tidak harus memengaruhi layanan lainnya sehingga sistem lebih mudah dikembangkan dan dipelihara. Namun, arsitektur ini juga memiliki kekurangan, seperti proses debugging yang lebih sulit dan kemungkinan keterlambatan pengiriman event. Oleh karena itu, diperlukan penanganan yang tepat agar komunikasi antarlayanan tetap berjalan dengan baik dan proses pemesanan FoodGo tidak terganggu.
