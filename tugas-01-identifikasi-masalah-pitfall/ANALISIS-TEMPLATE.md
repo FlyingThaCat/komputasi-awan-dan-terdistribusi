@@ -76,4 +76,4 @@
 
 ## Kesimpulan Kelompok
 
-[Ringkasan: jika FoodGo memperbaiki ketiga pitfall ini, apa arsitektur yang disarankan secara garis besar? Kaitkan dengan Tugas 2.]
+Berdasarkan hasil identifikasi empat pitfall pada studi kasus FoodGo, dapat disimpulkan bahwa masalah utama sistem berasal dari asumsi yang kurang tepat terkait keandalan jaringan, latensi, skalabilitas, dan kapasitas server. Hal ini dapat menyebabkan permintaan terhambat, server mengalami crash, serta layanan terganggu saat terjadi lonjakan pengguna. Untuk mengatasinya, FoodGo perlu menerapkan retry terbatas, timeout, circuit breaker, load balancer, rate limiting, dan message queue. Namun, setiap solusi memiliki trade-off, seperti bertambahnya kompleksitas sistem, biaya operasional, dan waktu pemrosesan. Oleh karena itu, solusi perlu diterapkan secara bertahap sesuai kebutuhan agar FoodGo menjadi lebih andal, stabil, dan mampu menangani lonjakan permintaan.
