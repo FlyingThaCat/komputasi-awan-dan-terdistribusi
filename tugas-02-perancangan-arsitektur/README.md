@@ -1,6 +1,12 @@
 # Tugas 2 (Pekan 2) — Perancangan Arsitektur untuk FoodGo
 
 **Materi terkait:** Architectural style (Layered, SOA, Peer-to-Peer, Publish-Subscribe).
+| Nama | NIM |
+|---|---|
+| I Made Sudiarte | 103072400044 |
+| John Tjandra Utomo | 103072400023 |
+| Ivan Radithya Tanaya Ardianto | 103072430005 | 
+| Lilo Wahyu Rachmadani | 103072400126 |
 
 ## Studi Kasus
 
