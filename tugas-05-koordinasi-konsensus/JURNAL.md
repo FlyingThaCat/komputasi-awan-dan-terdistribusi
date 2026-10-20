@@ -1,17 +1,16 @@
 # Jurnal Proses — Tugas 5
 
 ## Implementasi Bully
-- Kendala saat mengisi TODO 1-4: ...
-
+- Kendala saat mengisi TODO 1-4: memikirkan dan menghubungkan alur code
 ## Skenario 1: Start normal
 - Leader yang terpilih: Untuk Start awal, leader  yang terpilih adalah Node 5 karena idnya yang paling tinggi dari yang lain (node 1-4).
 - Log/observasi:
-<img src="../tugas-05-koordinasi-konsensus/bukti/hasil Start normal.png">
+<img src="../tugas-05-koordinasi-konsensus/bukti/hasil_start_normal.png">
 
 ## Skenario 2: Leader dimatikan
 - Leader baru yang terpilih: saat node 5 diberhentikan (leader pertama mati), node 4 
 - Berapa lama waktu sampai leader baru terdeteksi: berdasarkan gambar dibawah kurang lebih waktu yang diperlukan untuk memilih leader baru adalah 8,72 detik
-<img src="../tugas-05-koordinasi-konsensus/bukti/hasil_anilisis.png">
+<img src="../tugas-05-koordinasi-konsensus/bukti/hasil_lama_waktu_yang_dibutukan_leader_baru.png">
 
 ## Log Penggunaan AI (Level 2)
 
