@@ -101,8 +101,6 @@ graph LR
 - Service Notifikasi Kurir: Mengirimkan informasi status pesanan kepada pelanggan dan restoran, serta mendukung proses penugasan kurir.
 - Message Broker: Menjadi perantara untuk menyampaikan event dari layanan yang mengirimkan informasi ke layanan yang berlangganan
 
-Melalui arsitektur ini, FoodGo dapat memisahkan komunikasi yang membutuhkan respons langsung dengan komunikasi berbasis event. Dengan begitu, setiap layanan bisa menjalankan tugasnya masing-masing tanpa harus selalu berkomunikasi secara langsung dengan layanan lainnya. Hal ini juga membantu mengurangi ketergantungan antarlayanan sehingga sistem lebih mudah dikembangkan dan dipelihara.
-
 ## 3. Diagram Alur End-to-End
 
 Proses pemesanan FoodGo dimulai dari pelanggan membuat pesanan, melakukan pembayaran, hingga restoran menerima pesanan dan kurir ditugaskan untuk mengantarkannya. Komunikasi sinkron digunakan untuk pengecekan menu dan harga yang membutuhkan respons langsung, sedangkan komunikasi asinkron digunakan untuk mengirimkan informasi melalui *message broker*, seperti hasil pembayaran dan perubahan status pesanan.
