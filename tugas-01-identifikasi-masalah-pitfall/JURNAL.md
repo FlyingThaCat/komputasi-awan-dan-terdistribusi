@@ -9,8 +9,8 @@
     - Ivan Radithya Tanaya Ardianto | 103072430005
     -  I Made Sudiarte | 103072400044
 <br>
-- Poin diskusi: 
-- Perbedaan pendapat (jika ada): ...
+- Poin diskusi: Diskusi berfokus pada analisis penyebab dari startup aplikasi FoodGo mengalami kegagalan sistem di mana aplikasi menjadi lambat, dan server backend yang mengalami crash, mengidentifikasi pitfall utama yang dialami FoodGo,  menganalisis asumsi dari pitfall, dampak yang ditimbulkan akibat asumsi yang keliru, setelah itu mencari solusi untuk permasalah tersebut dan menentukan komponen apa yang akan dikorbankan untuk menerapkan solusi yang dikasih.
+- Perbedaan pendapat (jika ada): -
 
 ## Review Silang
 - [Nama] mengomentari analisis [Nama lain]: ...
