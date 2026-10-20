@@ -7,11 +7,9 @@
 
 ## Log Penggunaan AI (Level 2)
 
-> Wajib diisi sesuai kebijakan Level 2 di [`../RUBRIK-UMUM.md`](../RUBRIK-UMUM.md). Tulis "Tidak memakai AI" pada baris pertama jika memang tidak dipakai. Hanya untuk brainstorming ide/outline — bukan untuk kode/analisis/teks akhir.
-
 | Tanggal | Tool AI | Prompt yang diberikan | Ringkasan saran/ide AI | Bagaimana diolah jadi tulisan/kode sendiri |
 |---|---|---|---|---|
-| 20 Oktober 2026 | ChatGPT | Apa bedanya SOA dan Publish-Subscribe? | SOA memisahkan layanan, sedangkan Publish-Subscribe mengatur komunikasi melalui message broker. | Memahami perbedaan keduanya untuk menentukan arsitektur FoodGo. |
-| 20 Oktober 2026 | ChatGPT | Bagaimana cara membuat diagram arsitektur FoodGo? | Diagram perlu menunjukkan layanan yang digunakan dan hubungan komunikasinya. | Menyesuaikan diagram dengan alur pemesanan FoodGo. |
-| 20 Oktober 2026 | ChatGPT | Kenapa SOA dan Publish-Subscribe cocok untuk FoodGo? | Keduanya membantu mengurangi ketergantungan antarlayanan, tetapi memiliki kekurangan seperti debugging yang lebih sulit. | Menggunakan penjelasan tersebut untuk menyusun analisis sesuai studi kasus FoodGo. |
-| 20 Oktober 2026 | ChatGPT | Bagaimana alur komunikasi saat pelanggan memesan makanan di FoodGo? | Validasi menu menggunakan komunikasi langsung, sedangkan pembaruan status dan notifikasi menggunakan message broker. | Menyesuaikan alur komunikasi dengan diagram proses pemesanan. |
+| 20 Oktober 2026 | ChatGPT | Apa bedanya SOA dan Publish-Subscribe? | SOA digunakan untuk memisahkan fungsi sistem menjadi beberapa layanan mandiri, sedangkan Publish-Subscribe digunakan untuk mengirimkan informasi antarlayanan melalui message broker tanpa harus terhubung secara langsung. | Memahami perbedaan keduanya untuk menentukan arsitektur FoodGo. |
+| 20 Oktober 2026 | ChatGPT | Bagaimana cara membuat diagram arsitektur FoodGo? | Diagram perlu menunjukkan layanan Pesanan, Pembayaran, Katalog Resto, dan Notifikasi Kurir, serta message broker sebagai perantara komunikasi asinkron antarlayanan. | Menyesuaikan diagram dengan alur pemesanan FoodGo. |
+| 20 Oktober 2026 | ChatGPT | Kenapa SOA dan Publish-Subscribe cocok untuk FoodGo? | Kombinasi keduanya dapat mengurangi ketergantungan antarlayanan dan memudahkan pengembangan sistem. Namun, komunikasi melalui event juga membuat proses debugging lebih sulit dan perlu menangani kemungkinan event terlambat atau terkirim berulang. | Menggunakan penjelasan tersebut untuk menyusun analisis sesuai studi kasus FoodGo. |
+| 20 Oktober 2026 | ChatGPT | Bagaimana alur komunikasi saat pelanggan memesan makanan di FoodGo? | Validasi menu dan harga menggunakan komunikasi langsung karena membutuhkan respons segera, sedangkan pembaruan status pembayaran dan pengiriman notifikasi menggunakan message broker agar dapat diproses secara asinkron. | Menyesuaikan alur komunikasi dengan diagram proses pemesanan. |
