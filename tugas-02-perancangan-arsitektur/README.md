@@ -102,3 +102,79 @@ graph LR
 - Message Broker: Menjadi perantara untuk menyampaikan event dari layanan yang mengirimkan informasi ke layanan yang berlangganan
 
 Melalui arsitektur ini, FoodGo dapat memisahkan komunikasi yang membutuhkan respons langsung dengan komunikasi berbasis event. Dengan begitu, setiap layanan bisa menjalankan tugasnya masing-masing tanpa harus selalu berkomunikasi secara langsung dengan layanan lainnya. Hal ini juga membantu mengurangi ketergantungan antarlayanan sehingga sistem lebih mudah dikembangkan dan dipelihara.
+
+## 3. Diagram Alur End-to-End
+
+Proses pemesanan FoodGo dimulai dari pelanggan membuat pesanan, melakukan pembayaran, hingga restoran menerima pesanan dan kurir ditugaskan untuk mengantarkannya. Komunikasi sinkron digunakan untuk pengecekan menu dan harga yang membutuhkan respons langsung, sedangkan komunikasi asinkron digunakan untuk mengirimkan informasi melalui *message broker*, seperti hasil pembayaran dan perubahan status pesanan.
+
+## Diagram Alur Komunikasi
+
+```mermaid
+sequenceDiagram
+    actor C as Pelanggan
+    participant API as API Gateway
+    participant O as Service Pesanan
+    participant M as Service Katalog Resto
+    participant B as Message Broker
+    participant P as Service Pembayaran
+    participant PG as Payment Gateway
+    participant N as Service Notifikasi Kurir
+    actor R as Restoran
+    actor K as Kurir
+
+    C->>API: Membuat pesanan
+    API->>O: Mengirim data pesanan
+    O->>M: Memeriksa menu dan harga
+    M-->>O: Mengirim hasil pemeriksaan
+    O->>O: Menyimpan pesanan dengan status PENDING_PAYMENT
+    O-->>API: Mengirim ID pesanan dan status
+    API-->>C: Menampilkan informasi pesanan
+
+    O-)B: Publish event OrderCreated
+    B-)P: Mengirim event OrderCreated
+    P->>PG: Memproses pembayaran
+    PG-->>P: Mengirim hasil pembayaran
+
+    alt Pembayaran berhasil
+        P-)B: Publish event PaymentSucceeded
+        B-)O: Mengirim event PaymentSucceeded
+        O->>O: Memperbarui status menjadi PAID
+        O-)B: Publish event OrderPaid
+        B-)N: Mengirim event OrderPaid
+        N-->>R: Mengirim notifikasi pesanan baru
+
+        R->>API: Mengonfirmasi penerimaan pesanan
+        API->>O: Memproses konfirmasi restoran
+        O->>O: Memperbarui status menjadi ACCEPTED
+        O-)B: Publish event RestaurantAccepted
+        B-)N: Mengirim event RestaurantAccepted
+        N->>N: Menentukan kurir
+        N-->>K: Mengirim notifikasi penugasan kurir
+        N-->>C: Mengirim informasi status pesanan
+
+    else Pembayaran gagal
+        P-)B: Publish event PaymentFailed
+        B-)O: Mengirim event PaymentFailed
+        O->>O: Memperbarui status menjadi PAYMENT_FAILED
+        O-)B: Publish event PaymentFailed
+        B-)N: Mengirim event PaymentFailed
+        N-->>C: Mengirim notifikasi pembayaran gagal
+    end
+```
+
+## Penjelasan Alur Komunikasi
+
+| Tahap | Komunikasi | Jenis | Penjelasan |
+|---|---|---|---|
+| 1. Membuat pesanan | Pelanggan → API Gateway → Service Pesanan | Sinkron, request-response | Pelanggan mengirim permintaan pembuatan pesanan dan menerima informasi pesanan. |
+| 2. Validasi katalog | Service Pesanan ↔ Service Katalog Resto | Sinkron, request-response | Sistem memeriksa menu, harga, dan ketersediaan sebelum pesanan diproses lebih lanjut. |
+| 3. Memulai pembayaran | Service Pesanan → Message Broker → Service Pembayaran | Asinkron, event | Service Pesanan mengirim event `OrderCreated` agar Service Pembayaran dapat memulai proses pembayaran. |
+| 4. Memproses pembayaran | Service Pembayaran ↔ Payment Gateway | Sinkron, request-response | Service Pembayaran mengirim permintaan pembayaran dan menerima hasilnya. |
+| 5. Memperbarui status pembayaran | Service Pembayaran → Message Broker → Service Pesanan | Asinkron, event | Event `PaymentSucceeded` atau `PaymentFailed` digunakan untuk memperbarui status pesanan. |
+| 6. Memberi tahu restoran | Service Pesanan → Message Broker → Service Notifikasi Kurir → Restoran | Asinkron, event | Setelah pembayaran berhasil, restoran mendapatkan notifikasi pesanan baru. |
+| 7. Konfirmasi restoran | Restoran → API Gateway → Service Pesanan | Sinkron, request-response | Restoran mengonfirmasi apakah pesanan dapat diterima dan diproses. |
+| 8. Penugasan kurir | Service Pesanan → Message Broker → Service Notifikasi Kurir → Kurir | Asinkron, event | Setelah restoran menerima pesanan, sistem memproses penugasan kurir dan mengirimkan notifikasi kepada kurir serta pelanggan. |
+
+## Analisis Alur Komunikasi
+
+Pada alur komunikasi FoodGo, komunikasi sinkron digunakan untuk proses yang membutuhkan respons langsung, seperti pengecekan menu dan harga serta konfirmasi pesanan dari restoran. Sementara itu, komunikasi asinkron digunakan untuk mengirimkan informasi melalui *message broker*, misalnya hasil pembayaran dan perubahan status pesanan. Dengan menggunakan Publish-Subscribe, setiap layanan tidak harus berkomunikasi secara langsung dengan layanan lainnya untuk menyampaikan informasi. Sebagai contoh, ketika pembayaran berhasil, Service Pembayaran akan mengirimkan event yang nantinya diproses oleh Service Pesanan untuk memperbarui status pesanan dan Service Notifikasi Kurir untuk memberikan informasi kepada pihak terkait. Dengan cara ini, ketergantungan antarlayanan bisa dikurangi sehingga sistem FoodGo lebih mudah dikembangkan dan dikelola. Namun, sistem tetap perlu menangani kemungkinan keterlambatan pengiriman event, event yang diterima lebih dari sekali, atau kegagalan komunikasi agar proses pemesanan tetap berjalan dengan baik.
