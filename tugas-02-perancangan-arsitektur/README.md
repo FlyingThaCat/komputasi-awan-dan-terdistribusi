@@ -58,6 +58,47 @@ Kebijakan **Level 2 (AI Assisted Idea Generation & Structuring)** berlaku — li
 
 
 
-## Pemilihan Gaya Arsitektur
+## 1. Pemilihan Gaya Arsitektur
 
 FoodGo menggunakan kombinasi Service-Oriented Architecture (SOA) dan Publish-Subscribe untuk membuat sistem yang lebih terpisah dan tidak saling bergantung. Dengan SOA, fungsi utama FoodGo dibagi menjadi beberapa layanan, seperti modul Pesanan, Pembayaran, Kurir/Notifikasi, dan Katalog Resto, sehingga setiap layanan bisa dikembangkan, diperbarui, dan di-deploy secara mandiri. Sementara itu, Publish-Subscribe digunakan agar komunikasi antarlayanan bisa dilakukan melalui event yang dikirim menggunakan *message broker*. Kombinasi ini dipilih karena komunikasi yang membutuhkan respons langsung, seperti validasi menu, dapat menggunakan metode sinkron, sedangkan proses yang tidak harus langsung mendapatkan respons, seperti pengiriman notifikasi dan pembaruan status pesanan, dapat menggunakan metode asinkron. Dengan begitu, sistem FoodGo menjadi lebih fleksibel, mudah dikembangkan, dan tidak terlalu bergantung pada satu layanan saja.
+
+## 2. Diagram Arsitektur dan Interaksi Komponen
+
+Diagram berikut menggambarkan bagaimana setiap komponen dalam sistem FoodGo saling berinteraksi, mulai dari pelanggan membuat pesanan sampai proses pembayaran dan pengiriman notifikasi. Setiap layanan memiliki tugas masing-masing, sehingga tidak semua proses harus dilakukan secara langsung. Untuk komunikasi yang membutuhkan respons cepat, seperti validasi menu dan harga, digunakan komunikasi sinkron. Sementara itu, untuk proses seperti pengiriman informasi pesanan dan pembaruan status pembayaran, digunakan pola Publish-Subscribe melalui *message broker*.
+
+```mermaid
+graph LR
+    Client[Pelanggan] -->|HTTP Request: Membuat Pesanan| OrderSvc[Service Pesanan]
+
+    OrderSvc -->|Validasi Menu dan Harga| RestoSvc[Service Katalog Resto]
+    RestoSvc -->|Hasil Validasi| OrderSvc
+
+    OrderSvc -->|Publish Event: OrderCreated| Broker[(Message Broker)]
+
+    Broker -->|Subscribe: OrderCreated| PaymentSvc[Service Pembayaran]
+    PaymentSvc -->|Proses Pembayaran| PG[Payment Gateway]
+    PG -->|Hasil Pembayaran| PaymentSvc
+
+    PaymentSvc -->|Publish Event: PaymentSucceeded atau PaymentFailed| Broker
+
+    Broker -->|Subscribe: Status Pembayaran| OrderSvc
+    Broker -->|Subscribe: Status Pembayaran| NotifSvc[Service Notifikasi Kurir]
+
+    NotifSvc -->|Notifikasi Status Pesanan| Client
+    NotifSvc -->|Notifikasi Pesanan Baru| RestoSvc
+
+    RestoSvc -->|Konfirmasi Pesanan| OrderSvc
+    OrderSvc -->|Publish Event: RestaurantAccepted| Broker
+    Broker -->|Subscribe: RestaurantAccepted| NotifSvc
+```
+
+**Keterangan:**
+
+- Pelanggan: Mengirim permintaan untuk membuat pesanan melalui sistem FoodGo.
+- Service Pesanan: Mengelola pesanan, mulai dari proses pembuatan sampai perubahan status pesanan.
+- Service Pembayaran: Memproses pembayaran pelanggan melalui Payment Gateway dan mengirimkan hasilnya melalui event.
+- Service Katalog Resto: Menyediakan informasi menu, harga, dan ketersediaan menu, serta mendukung proses konfirmasi pesanan dari restoran.
+- Service Notifikasi Kurir: Mengirimkan informasi status pesanan kepada pelanggan dan restoran, serta mendukung proses penugasan kurir.
+- Message Broker: Menjadi perantara untuk menyampaikan event dari layanan yang mengirimkan informasi ke layanan yang berlangganan
+
+Melalui arsitektur ini, FoodGo dapat memisahkan komunikasi yang membutuhkan respons langsung dengan komunikasi berbasis event. Dengan begitu, setiap layanan bisa menjalankan tugasnya masing-masing tanpa harus selalu berkomunikasi secara langsung dengan layanan lainnya. Hal ini juga membantu mengurangi ketergantungan antarlayanan sehingga sistem lebih mudah dikembangkan dan dipelihara.
