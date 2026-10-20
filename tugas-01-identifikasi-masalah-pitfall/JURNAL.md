@@ -3,8 +3,13 @@
 > Isi jurnal ini selama proses diskusi berlangsung, bukan ditulis ulang rapi di akhir. Tulis dengan gaya bebas — poin diskusi, kebuntuan, perubahan pikiran.
 
 ## [Tanggal diskusi 1]
-- Peserta: [nama-nama yang hadir]
-- Poin diskusi: ...
+- Peserta: 
+    - John Tjandra Utomo | 103072400023 
+    - Lilo Wahyu Rachmadani | 103072400126 
+    - Ivan Radithya Tanaya Ardianto | 103072430005
+    -  I Made Sudiarte | 103072400044
+<br>
+- Poin diskusi: 
 - Perbedaan pendapat (jika ada): ...
 
 ## Review Silang

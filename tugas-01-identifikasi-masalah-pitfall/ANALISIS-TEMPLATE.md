@@ -4,10 +4,10 @@
 
 | Nama | NIM | Kontribusi |
 |---|---|---|
-| I Made Sudiarte | 103072400044 | [pitfall/bagian yang dikerjakan] |
-| John Tjandra Utomo | 103072400023 | [pitfall/bagian yang dikerjakan] |
-| Ivan Radithya Tanaya Ardianto | 103072430005 | [pitfall/bagian yang dikerjakan] |
-| Lilo Wahyu Rachmadani | 103072400126 | [pitfall/bagian yang dikerjakan] |
+| I Made Sudiarte | 103072400044 | Pitfall 4: Asumsi kapasitas tak terbatas (tidak ada backpressure dan load shedding) |
+| John Tjandra Utomo | 103072400023 | Pitfall 1: "network is always reliable" |
+| Ivan Radithya Tanaya Ardianto | 103072430005 | Pitfall 3: Single Point of Failure dan Skalabilitas Buruk |
+| Lilo Wahyu Rachmadani | 103072400126 | Pitfall 2: Latency is Zero |
 
 ## Pitfall 1: "network is always reliable" — ditulis oleh John Tjandra Utomo
 
