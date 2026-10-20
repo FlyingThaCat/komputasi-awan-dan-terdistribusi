@@ -9,7 +9,7 @@
 
 ## Skenario 2: Leader dimatikan
 - Leader baru yang terpilih: saat node 5 diberhentikan (leader pertama mati), node 4 
-- Berapa lama waktu sampai leader baru terdeteksi: berdasarkan gambar dibawah kurang lebih waktu yang diperlukan untuk memilih leader baru adalah 8,72 detik
+- Berapa lama waktu sampai leader baru terdeteksi: berdasarkan gambar dibawah kurang lebih waktu yang diperlukan untuk memilih leader baru adalah 10,08 detik
 <img src="../tugas-05-koordinasi-konsensus/bukti/hasil_lama_waktu_yang_dibutukan_leader_baru.png">
 
 ## Log Penggunaan AI (Level 2)
