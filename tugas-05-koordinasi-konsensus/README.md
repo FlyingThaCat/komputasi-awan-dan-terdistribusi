@@ -61,3 +61,13 @@ tugas-05-koordinasi-konsensus/
 Kebijakan **Level 2 (AI Assisted Idea Generation & Structuring)** berlaku — lihat [`../RUBRIK-UMUM.md`](../RUBRIK-UMUM.md). Boleh bertanya ke AI tentang gambaran umum algoritma election; **tidak boleh** meminta AI menuliskan isi `# TODO` di `src/node.py` (logika `on_message`, `start_election`, `declare_leader`, `monitor_leader`). Catat pemakaian AI di "Log Penggunaan AI" pada `JURNAL.md`.
 
 - `README.md` wajib menjelaskan kenapa Bully Algorithm selalu memilih node ber-ID tertinggi yang masih hidup, dan apa kelemahannya dibanding algoritma lain (mis. jumlah pesan yang dikirim saat election, single point of failure sebelum leader baru terpilih) — bukan sekadar definisi generik.
+
+## Penjelasan
+1. kenapa Bully Algorithm selalu memilih node ber-ID tertinggi yang masih hidup
+    jawab : karena yang terkuat yang berkuasa (atau kalo dialgoritma, node dengan nilai/id tertinggi yang akan dijadikan pemimpin yang akan mengkoordinasikan pesan/informasi kepada node lainmya).
+2. kelemahannya dibanding algoritma lain
+    jawab : waktu tunggu saat satu node menerima respon pesan koordinaasi dari node dengan id lebih tinggi
+3. kenapa perlu leader pada sistem FoodGo skenario pesanan
+    jawab :  untuk mengatur koordinasi antrian pesanan pada sistem jadi pesanannya ngga numpuk, setiap leader yang tumbang akan langsung digantikan dengan leader yang baru dengan ketentuan idnya lebih tinggi
+4. trade-off Bully vs Raft
+    Jawab : trade-off jika menggunakan Bully yakni pesanan makanan bisa menjadi duplikat jika jaringan antar dataserver terputus dan membuat 2 server yang harusnya hanya satu yang mimpin malah jadi 2. sedangkan Raft harus nunggu persetujuan dari mayoritas node saat ingin menulis pesanan
