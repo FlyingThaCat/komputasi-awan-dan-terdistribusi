@@ -7,13 +7,16 @@
     - John Tjandra Utomo | 103072400023 
     - Lilo Wahyu Rachmadani | 103072400126 
     - Ivan Radithya Tanaya Ardianto | 103072430005
-    -  I Made Sudiarte | 103072400044
+    - I Made Sudiarte | 103072400044
 <br>
 - Poin diskusi: Diskusi berfokus pada analisis penyebab dari startup aplikasi FoodGo mengalami kegagalan sistem di mana aplikasi menjadi lambat, dan server backend yang mengalami crash, mengidentifikasi pitfall utama yang dialami FoodGo,  menganalisis asumsi dari pitfall, dampak yang ditimbulkan akibat asumsi yang keliru, setelah itu mencari solusi untuk permasalah tersebut dan menentukan komponen apa yang akan dikorbankan untuk menerapkan solusi yang dikasih.
 - Perbedaan pendapat (jika ada): -
 
 ## Review Silang
-- [Nama] mengomentari analisis [Nama lain]: ...
+- [John] mengomentari analisis [Lilo]: Coba tambahkan bukti yang relevan pada bagian "Kenapa ini keliru" sehingga ada bukti nyata yang terjadi pada suatu perusahaan besar startup yang mirip dengan kejadian pada aplikasi FoodGo yang sedang dibahas.
+- [Ivan] mengomentari analisis [Made]: Pada bagian "Solusi desain awal" mungkin bisa dibuat step-by-step sehingga lebih mudah dipahami oleh pengguna. 
+- [Lilo] mengomentari analisis [Ivan]: Memperjelas apa saja yang dibahas pada bagian "Kenapa ini keliru" agar analisa yang disampaikan bisa lebih dipahami.
+- [Made] mengomentari analisis [John]: Mungkin memperbaiki kata pada bagian "Trade-off" dari 3x menjadi tiga kali dan kata pada bagian "Solusi desain awal" dari 2-3 kali menjadi dua sampai tiga kali, serta mengubah kata pada bagian "Trade-off" yaitu meledak menjadi kata yang bisa dipahami.
 
 ## Log Penggunaan AI (Level 2)
 
