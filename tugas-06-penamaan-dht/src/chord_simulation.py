@@ -46,6 +46,7 @@ class ChordRing:
         for key_hash, (kurir_id, _) in self.data.items():
             if self.find_successor(key_hash) == node_id:
                 print(f"[TODO] Node '{node_name}' (id={node_id}) bergabung, alamat {node_ip}")
+        print(f"[TODO] Node '{node_name}' (id={node_id}) bergabung, alamat {node_ip}")
 
     def leave(self, node_name: str):
         """Keluarkan sebuah node dari ring. Data yang dipegangnya harus
