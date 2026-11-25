@@ -28,7 +28,6 @@ python3 src/chord_simulation.py
 
 Soal 1: Jelaskan **kenapa DHT/Chord** lebih cocok untuk kasus ini dibanding **flat naming sederhana** (mis. tabel pusat ID→IP) atau **DNS konvensional** — kaitkan dengan sifat "IP kurir sering berubah" dan kebutuhan tanpa titik gagal tunggal.
 
-#### Jawaban No.1: 
 DHT (Distributed Hash Table) adalah cara menyimpan pasangan kunci dan nilai yang tersebar di banyak node, tanpa satu server pusat. Setiap node hanya menyimpan sebagian data, dan ada aturan yang membuat siapa pun bisa menghitung node mana yang menyimpan suatu data. Chord adalah salah satu cara membuat DHT. Pada Chord, ID kurir dan ID node di-hash ke rentang angka yang sama, lalu node disusun melingkar (ring) berdasarkan angka hashnya. Sebuah data disimpan di node pertama yang angkanya sama dengan atau lebih besar dari angka data itu (successor). Jika tidak ada node yang angkanya lebih besar, penelusuran kembali ke node dengan angka terkecil (wrap-around).
 
 Flat naming sederhana berarti satu tabel pusat di satu server yang berisi pasangan ID kurir dan IP-nya. Cara ini kurang cocok karena semua pencarian dan semua pembaruan IP masuk ke satu server. Pada FoodGo, IP kurir sering berubah, sehingga pembaruan datang terus-menerus dan server mudah kewalahan (bottleneck). Server itu juga menjadi titik gagal tunggal, karena jika mati, pelanggan tidak bisa menemukan kurir mana pun.
@@ -39,7 +38,6 @@ Chord lebih cocok untuk kasus FoodGo karena dua alasan. Pertama, IP kurir sering
 
 Soal 2: Gambarkan (boleh pakai Mermaid, lihat Tugas 2) ring topology dari simulasi kalian, tandai node mana yang bertanggung jawab atas ID Kurir mana. 
 
-#### Jawaban No.2:
 - Ring Topology Simulasi 1 (kondisi awal node 40, 102, 136, dan 177 join)
 ```mermaid
 graph LR
@@ -110,7 +108,6 @@ graph LR
 
 Soal 3: Jelaskan apa yang terjadi pada mapping saat sebuah node **keluar** dari ring (siapa yang mengambil alih tanggung jawabnya) — dukung dengan output program.
 
-#### Jawaban No.3:
 Didapatkan output program sebagai berikut:
 ```bash
 [JOIN] Node 'node-jakarta-1' (id=177) bergabung, alamat 10.0.0.1
