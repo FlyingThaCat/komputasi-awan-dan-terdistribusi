@@ -26,9 +26,134 @@ python3 src/chord_simulation.py
 
 ## Tugas Analisis (`README.md`)
 
-1. Jelaskan **kenapa DHT/Chord** lebih cocok untuk kasus ini dibanding **flat naming sederhana** (mis. tabel pusat ID→IP) atau **DNS konvensional** — kaitkan dengan sifat "IP kurir sering berubah" dan kebutuhan tanpa titik gagal tunggal.
-2. Gambarkan (boleh pakai Mermaid, lihat Tugas 2) ring topology dari simulasi kalian, tandai node mana yang bertanggung jawab atas ID Kurir mana.
-3. Jelaskan apa yang terjadi pada mapping saat sebuah node **keluar** dari ring (siapa yang mengambil alih tanggung jawabnya) — dukung dengan output program.
+Soal 1: Jelaskan **kenapa DHT/Chord** lebih cocok untuk kasus ini dibanding **flat naming sederhana** (mis. tabel pusat ID→IP) atau **DNS konvensional** — kaitkan dengan sifat "IP kurir sering berubah" dan kebutuhan tanpa titik gagal tunggal.
+
+#### Jawaban No.1: 
+DHT (Distributed Hash Table) adalah cara menyimpan pasangan kunci dan nilai yang tersebar di banyak node, tanpa satu server pusat. Setiap node hanya menyimpan sebagian data, dan ada aturan yang membuat siapa pun bisa menghitung node mana yang menyimpan suatu data. Chord adalah salah satu cara membuat DHT. Pada Chord, ID kurir dan ID node di-hash ke rentang angka yang sama, lalu node disusun melingkar (ring) berdasarkan angka hashnya. Sebuah data disimpan di node pertama yang angkanya sama dengan atau lebih besar dari angka data itu (successor). Jika tidak ada node yang angkanya lebih besar, penelusuran kembali ke node dengan angka terkecil (wrap-around).
+
+Flat naming sederhana berarti satu tabel pusat di satu server yang berisi pasangan ID kurir dan IP-nya. Cara ini kurang cocok karena semua pencarian dan semua pembaruan IP masuk ke satu server. Pada FoodGo, IP kurir sering berubah, sehingga pembaruan datang terus-menerus dan server mudah kewalahan (bottleneck). Server itu juga menjadi titik gagal tunggal, karena jika mati, pelanggan tidak bisa menemukan kurir mana pun.
+
+DNS (Domain Name System) adalah sistem yang menerjemahkan nama domain menjadi alamat IP. Pencariannya berjalan dari server tingkat atas ke bawah, dan hasilnya sering disimpan sementara (cache) agar cepat. DNS cocok untuk situs web yang IP-nya jarang berubah, tetapi kurang cocok untuk kurir yang IP-nya sering berubah, karena cache bisa menyimpan IP lama sehingga pelanggan diarahkan ke alamat yang sudah tidak berlaku. Selain itu, setiap kali IP kurir berubah, perubahannya harus dilaporkan ke satu server resmi yang mengelola nama tersebut (server otoritatif). Karena IP kurir sering berubah, server itu akan terus-menerus menerima laporan perubahan.
+
+Chord lebih cocok untuk kasus FoodGo karena dua alasan. Pertama, IP kurir sering berubah, dan setiap perubahan IP hanya perlu dikirim ke satu node penanggung jawab yang bisa dihitung dengan aturan successor. Dengan begitu, tidak ada server yang menerima seluruh pembaruan dan tidak ada cache yang menyimpan IP lama. Kedua, sistem harus berjalan tanpa titik gagal tunggal. Data kurir tersebar di banyak node dan tidak ada satu server pusat yang menentukan seluruh sistem. Saat node bergabung atau keluar, hanya data milik node itu yang berpindah, sehingga sistem tetap berjalan.
+
+Soal 2: Gambarkan (boleh pakai Mermaid, lihat Tugas 2) ring topology dari simulasi kalian, tandai node mana yang bertanggung jawab atas ID Kurir mana. 
+
+#### Jawaban No.2:
+- Ring Topology Simulasi 1 (kondisi awal node 40, 102, 136, dan 177 join)
+```mermaid
+graph LR
+  N40(node-bandung-1<br/>id=40<br/>10.0.0.3) 
+  N102(node-jakarta-2<br/>id=102<br/>10.0.0.2)
+  N136(node-surabaya-1<br/>id=136<br/>10.0.0.4)
+  N177(node-jakarta-1<br/>id=177<br/>10.0.0.1)
+
+  K1[kurir-001<br/>key=50]
+  K2[kurir-002<br/>key=28]
+  K3[kurir-003<br/>key=132]
+
+  N40-->|next| N102
+  N102 -->|next| N136
+  N136 -->|next| N177
+  N177 -->|wrap-around| N40
+  
+  N40 -->|menyimpan| K2
+  N102 -->|menyimpan| K1
+  N136 -->|menyimpan| K3
+```
+
+- Ring Topology Simulasi 2 (node 123 join)
+```mermaid
+graph LR
+  N40(node-bandung-1<br/>id=40<br/>10.0.0.3) 
+  N102(node-jakarta-2<br/>id=102<br/>10.0.0.2)
+  N136(node-surabaya-1<br/>id=136<br/>10.0.0.4)
+  N177(node-jakarta-1<br/>id=177<br/>10.0.0.1)
+  N123(node-medan-1<br/>id=123<br/>10.0.0.5 - baru)
+
+  K1[kurir-001<br/>key=50]
+  K2[kurir-002<br/>key=28]
+  K3[kurir-003<br/>key=132]
+
+  N40-->|next| N102
+  N102 -->|next| N123
+  N123 -->|next| N136
+  N136 -->|next| N177
+  N177 -->|wrap-around| N40
+  
+  N40 -->|menyimpan| K2
+  N102 -->|menyimpan| K1
+  N136 -->|menyimpan| K3
+```
+
+- Ring Topology Simulasi 3 (node 177 leave)
+```mermaid
+graph LR
+  N40(node-bandung-1<br/>id=40<br/>10.0.0.3) 
+  N102(node-jakarta-2<br/>id=102<br/>10.0.0.2)
+  N136(node-surabaya-1<br/>id=136<br/>10.0.0.4)
+  N123(node-medan-1<br/>id=123<br/>10.0.0.5)
+
+  K1[kurir-001<br/>key=50]
+  K2[kurir-002<br/>key=28]
+  K3[kurir-003<br/>key=132]
+
+  N40-->|next| N102
+  N102 -->|next| N123
+  N123 -->|next| N136
+  N136 -->|wrap-around| N40
+  
+  N40 -->|menyimpan| K2
+  N102 -->|menyimpan| K1
+  N136 -->|menyimpan| K3
+```
+
+Soal 3: Jelaskan apa yang terjadi pada mapping saat sebuah node **keluar** dari ring (siapa yang mengambil alih tanggung jawabnya) — dukung dengan output program.
+
+#### Jawaban No.3:
+Didapatkan output program sebagai berikut:
+```bash
+[JOIN] Node 'node-jakarta-1' (id=177) bergabung, alamat 10.0.0.1
+[JOIN] Node 'node-jakarta-2' (id=102) bergabung, alamat 10.0.0.2
+[JOIN] Node 'node-bandung-1' (id=40) bergabung, alamat 10.0.0.3
+[JOIN] Node 'node-surabaya-1' (id=136) bergabung, alamat 10.0.0.4
+```
+
+Berikut gambaran dari topologi ring
+```                        
+                     [ ID: 40 ]
+                    node-bandung-1
+                      (10.0.0.3)
+                      /        \
+                     /          \
+        [ ID: 177 ]                [ ID: 102 ]
+      node-jakarta-1              node-jakarta-2
+        (10.0.0.1)                  (10.0.0.2)
+              \                      /
+               \                    /
+          [ ID: 136 ] ------- [ ID: 123 ]
+        node-surabaya-1       node-medan-1
+          (10.0.0.4)           (10.0.0.5)
+
+```
+
+
+Node telah diurutkan ascending (terkecil ke terbesar) pada program node dengan id =  177 yaitu node-jakarta-1 akan keluar dari ring
+
+```bash
+[LEAVE] Node 'node-jakarta-1' (id=177) keluar dari ring
+```
+
+Selanjutnya, successor yang meneruskan pada lokasi terdekat dan bertanggung jawab adalah node-bandung-1, id = 40 karena ring melingkar sehingga node-bandung-1 akan mengambil seluruh wilayah dengan id = 137 - 177
+
+``` bash
+--- Sebuah node keluar ---
+[LEAVE] Node 'node-jakarta-1' (id=177) keluar dari ring
+kurir-001 -> 192.168.1.10
+kurir-002 -> 192.168.1.11
+```
+
+Karena kurir tidak ditugaskan pada node-jakarta-1 sehingga tidak memunculkan log pesan, sehingga keluarnya node tidak merusak struktur pencarian pada node-node lain yang masih aktif
 
 ## Struktur Submission
 
