@@ -1,6 +1,12 @@
 # Tugas 6 (Pekan 6) — Penamaan & Resolusi Lokasi
 
 **Materi terkait:** Flat Naming, Structured Naming (DNS), Distributed Hash Table (DHT)/Chord.
+| Nama | NIM |
+|---|---|
+| I Made Sudiarte | 103072400044 |
+| John Tjandra Utomo | 103072400023 |
+| Ivan Radithya Tanaya Ardianto | 103072430005 | 
+| Lilo Wahyu Rachmadani | 103072400126 |
 
 ## Studi Kasus
 
