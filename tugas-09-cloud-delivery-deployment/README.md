@@ -14,9 +14,41 @@ Pemerintah ingin membangun **Sistem Data Kependudukan** (nama, NIK, alamat, data
 ## Tugas Kelompok
 
 1. **Rekomendasikan Deployment Model** (Public / Private / Hybrid / Community Cloud) yang paling tepat untuk sistem ini. Jelaskan alasannya berdasarkan **karakteristik NIST** (on-demand self-service, broad network access, resource pooling, rapid elasticity, measured service) dikaitkan dengan kebutuhan kerahasiaan vs skalabilitas.
+   
+   Berdasarkan dari karakter NIST kita bisa menggunakan Hybrid Cloud dengan pemetaan sebagai berikut
+     -  Private Cloud = dapat digunakan untuk menyimpan data sensitif seperti NIK, Alamat, Nama dan Biometrik
+     -  Public Cloud = dapat digunakan untuk menghosting layanan pendukung atau aplikasi yang tidak menyimpan data sensitif maupun critical
+
+
 2. **Rekomendasikan Service Model** (IaaS / PaaS / SaaS) yang tepat untuk komponen-komponen berbeda dari sistem ini (boleh berbeda service model untuk komponen berbeda, mis. database inti vs portal publik untuk pengecekan status).
+
+  - IaaS untuk database utama dan beberapa aplikasi penting dan cadangan karena IaaS memberikan kontrol lebih advanced dan memberikan kontrol keamanan yang lebih baik
+  - PaaS digunakan untuk api integrasi, authentikasi, dan monitoring karena dapat mempermudah dan mempercepat pengembangan dan pengelolaan aplikasi
+  - SaaS digunakan untuk portal informasi umum yang tidak menyimpan data sensitif karena sudah jadi dan dapat digunakan secara cepat
+
+
 3. Jelaskan **minimal 2 risiko spesifik** dari pilihan kalian dan mitigasinya (mis. jika Hybrid Cloud dipilih: risiko sinkronisasi data antara private & public segment).
+
+  Resiko 1: kebocoran data saat sinkronasi data
+  
+    - mitigasi: dengan mengenkripsi data, pengiriman data sensitif dan audit akses terhadap data / jalur
+
+  Resiko 2: Penyalahgunaan API oleh instansi
+
+    - mitigasi: Authentikasi multifaktor, pembatasan hak akses, melakukan ip binding dan logging activity
+
+  Resiko 3: Gangguan koneksi antar cloud
+
+    - mitigasi: Menyediakan jaringan cadangan, monitoring, disaster recovery plan serta mendeploy beberapa data di beberapa vendor sehingga tidak terpusat untuk meningkatkan redudansi
+
+
 4. Bandingkan singkat dengan **satu alternatif yang kalian tolak** — kenapa alternatif itu kurang tepat (mis. kenapa Public Cloud murni ditolak, atau kenapa Private Cloud murni dianggap kurang skalabel).
+
+  - Alternatif yang ditolak: Pure Private Cloud
+    - Lebih mudah dikendalikan pemerintah dan memiliki keamanan tinggi
+    - Kapasitas sangat bergantung dengan infrastruktur yang ada
+    - Berpotensi mengalami downtime ketika lonjakan akses tinggi
+    - Membutuhkan biaya dan maintenance yang besar
 
 ## Struktur Submission
 
